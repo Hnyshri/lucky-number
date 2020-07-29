@@ -39,14 +39,14 @@ function welcomePage()
 }
 
 
+
 function make4DigitNo($value, $againPairArray, $key, $removeAlpha)
 {
-    $strlen = 5 - strlen($value);
+    $strlen = 4 - strlen($value);
     $left = '';
     $set = 0;
-
-    if ($key == 5) {
-        for ($i = 25; $i < 25 + $strlen; $i++) {
+    if ($key == 4) {
+        for ($i = 20; $i < 20 + $strlen; $i++) {
             $left .= $removeAlpha[$i];
         }
         $value = $value . $left;
@@ -54,9 +54,8 @@ function make4DigitNo($value, $againPairArray, $key, $removeAlpha)
         return ['value' => $value, 'againPairArray' => $againPairArray];
     }
 
-    if ($key + 1 == 5 && $againPairArray[$key + 1] == "") {
-
-        for ($i = 25; $i < 25 + $strlen; $i++) {
+    if ($key + 1 == 4 && $againPairArray[$key + 1] == "") {
+        for ($i = 20; $i < 20 + $strlen; $i++) {
             $left .= $removeAlpha[$i];
             $value = $value . $left;
         }
@@ -64,36 +63,42 @@ function make4DigitNo($value, $againPairArray, $key, $removeAlpha)
         return ['value' => $value, 'againPairArray' => $againPairArray];
     }
 
-    if ($key != 5 && $againPairArray[$key + 1] == "") {
+    if ($key != 4 && $againPairArray[$key + 1] == "") {
         make4DigitNo($value, $againPairArray, $key + 1, $removeAlpha);
     }
+
     $length_of_left = strlen($againPairArray[$key + 1]);
     for ($i = 0; $i < $strlen; $i++) {
         $left .= $againPairArray[$key + 1][$i];
     }
+
     $left_arr_val = substr($againPairArray[$key + 1], $strlen);
     $value = $value . $left;
     $againPairArray[$key] = $value;
     $againPairArray[$key + 1] = $left_arr_val;
-    if (strlen($value) < 5) {
+    if (strlen($value) < 4) {
         make4DigitNo($value, $againPairArray, $key + 1, $removeAlpha);
     }
+
     return ['value' => $value, 'againPairArray' => $againPairArray];
 }
 
 function mod($againPairArray, $removeAlpha, $pairNo, $luckyNumber, $key = 0)
 {
+
     if ($key == 5) {
         return $luckyNumber;
     }
     $value = $againPairArray[$key];
-    if (strlen($value) < 5) {
+
+    if (strlen($value) < 4) {
         $arr_make = make4DigitNo($value, $againPairArray, $key, $removeAlpha);
         $value = $arr_make['value'];
         $againPairArray = $arr_make['againPairArray'];
     }
+
     $sumToken = sumValue($value);
-    if ($sumToken == 0) {
+    if ($sumToken % 32 != 0) {
         $luckyNumber[] = $sumToken;
         return mod($againPairArray, $removeAlpha, $pairNo, $luckyNumber, $key + 1);
     } else {
@@ -109,7 +114,8 @@ function mod($againPairArray, $removeAlpha, $pairNo, $luckyNumber, $key = 0)
 
 function recusivegetToken($value, $key, $newKey, $removeAlpha, $pairNo, $sumToken, $againPairArray)
 {
-    if ($sumToken == 0) {
+
+    if (($sumToken % 32) == 0) {
         $left_index = $newKey;
         if ($againPairArray[$left_index] == "") {
             $newKey = $newKey + 1;
@@ -123,12 +129,14 @@ function recusivegetToken($value, $key, $newKey, $removeAlpha, $pairNo, $sumToke
         $sumToken = sumValue($newpair);
         return recusivegetToken($newpair, $key, $newKey, $removeAlpha, $pairNo, $sumToken, $againPairArray);
     }
+
     return ["sumToken" => $sumToken, "againPairArray" => $againPairArray];
 }
 
 function sumValue($numbers)
 {
     $digits_sum = 0;
+
     for ($i = 0; $i < strlen($numbers); $i++) {
         echo "<pre>";
         $digits_sum += $numbers[$i];
@@ -136,11 +144,13 @@ function sumValue($numbers)
     return $digits_sum;
 }
 
+
 function makePair($removeAlpha, $pairNo)
 {
     $list = [];
     $splitIndex = 0;
     for ($i = 0; $i < 5; $i++) {
+        echo "<pre>";
         $value =  substr($removeAlpha, $splitIndex, $pairNo);
         array_push($list, $value);
         $splitIndex = $splitIndex + $pairNo;
