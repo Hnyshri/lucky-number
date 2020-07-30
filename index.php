@@ -8,7 +8,7 @@ $var = [];
 function welcomePage()
 {
     $status = 2;
-    $pairNo = 4;
+    $pairNo = 5;
     if ($status == 2) {
         // $api = "https://api.blockcypher.com/v1/eth/main";
         // $response = file_get_contents($api);
@@ -45,6 +45,17 @@ function make4DigitNo($value, $againPairArray, $key, $removeAlpha)
     $left = '';
     $set = 0;
 
+    // if ($key == 6) {
+    //     for ($i = 25; $i < 25 + $strlen; $i++) {
+    //         $left .= $removeAlpha[$i];
+    //     }
+    //     $value = $value . $left;
+    //     $againPairArray[$key] = $value;
+    //     echo 1;
+    //     print_r($againPairArray[$key]);exit;
+    //     return ['value' => $value, 'againPairArray' => $againPairArray];
+    // }
+    
     if ($key == 5) {
         for ($i = 25; $i < 25 + $strlen; $i++) {
             $left .= $removeAlpha[$i];
@@ -87,17 +98,31 @@ function mod($againPairArray, $removeAlpha, $pairNo, $luckyNumber, $key = 0)
         return $luckyNumber;
     }
     $value = $againPairArray[$key];
+
     if (strlen($value) < 5) {
         $arr_make = make4DigitNo($value, $againPairArray, $key, $removeAlpha);
         $value = $arr_make['value'];
         $againPairArray = $arr_make['againPairArray'];
     }
+
     $sumToken = sumValue($value);
+
     if ($sumToken == 0) {
         $luckyNumber[] = $sumToken;
         return mod($againPairArray, $removeAlpha, $pairNo, $luckyNumber, $key + 1);
-    } else {
+    } 
+    // elseif (in_array($sumToken, $luckyNumber)) {
+        
+      
+    //     $check = make4DigitNo($value, $againPairArray, $key + 1, $removeAlpha);
 
+    //     // $arr = recusivegetToken($value, $key, $key + 1, $removeAlpha, $pairNo, $sumToken, $againPairArray);
+
+    //     print_r($key);
+
+    //     exit;
+    // }
+     else {
         $arr = recusivegetToken($value, $key, $key + 1, $removeAlpha, $pairNo, $sumToken, $againPairArray);
         $sumToken = $arr['sumToken'];
         $againPairArray = $arr['againPairArray'];
